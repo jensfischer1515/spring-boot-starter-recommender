@@ -1,0 +1,47 @@
+# APPLICATION SETTINGS (SpringApplication)
+spring:
+  main:
+    web_environment: true
+    show_banner: false
+
+  # DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
+  datasource:
+    platform: h2
+    url: "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false"
+    username: sa
+    password:
+    max-active: 15
+    max-idle: 5
+    min-idle: 1
+    initial-size: 5
+
+  h2:
+    console:
+      enabled: true
+
+# EMBEDDED SERVER CONFIGURATION (ServerProperties)
+server:
+  port: 0
+
+endpoints:
+  health:
+    sensitive: false
+
+logging:
+  pattern:
+    # see https://github.com/spring-cloud/spring-cloud-sleuth/blob/master/docs/src/main/asciidoc/features.adoc#features
+    # see TraceEnvironmentPostProcessor#postProcessEnvironment(ConfigurableEnvironment, SpringApplication)
+    #level: '%clr(%5p) %clr([${spring.application.name:},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-},%X{X-Span-Export:-}]){yellow}'
+    console: '%clr(%6relative){faint} %clr(${LOG_LEVEL_PATTERN:-%5level}) %clr(%-40.40logger{0}){cyan} %clr(:){faint} %message%n%wEx'
+  level:
+    org.openended.mahout: 'DEBUG'
+    org.apache.mahout: 'INFO'
+    org.apache.mahout.cf.taste.impl.common.RefreshHelper: 'WARN'
+    org.springframework.boot: 'INFO'
+    org.springframework.core: 'INFO'
+    jdbc.sqlonly: 'INFO'
+    jdbc.sqltiming: 'WARN'
+    jdbc.audit: 'OFF'
+    jdbc.resultset: 'WARN'
+    jdbc.resultsettable: 'INFO'
+    jdbc.connection: 'WARN'
