@@ -42,11 +42,11 @@ public class PreferenceServiceImpl implements PreferenceService {
 
     @Override
     @Transactional(propagation = REQUIRED)
-    public List<Preference> saveFromUserUUID(UUID userUUID, Map<UUID, Integer> itemQuantities) {
-        log.debug("Creating user '{}'", userUUID);
-        migrationRepository.save(userUUID);
+    public List<Preference> saveFromUserUUID(UUID userUuid, Map<UUID, Integer> itemQuantities) {
+        log.debug("Creating user '{}'", userUuid);
+        migrationRepository.save(userUuid);
         return itemQuantities.entrySet().stream()
-                .map(entry -> save(userUUID, entry.getKey(), entry.getValue()))
+                .map(entry -> save(userUuid, entry.getKey(), entry.getValue()))
                 .collect(toList());
     }
 

@@ -4,8 +4,6 @@ import static lombok.AccessLevel.PACKAGE;
 
 import java.io.Serializable;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -42,7 +40,6 @@ public class Preference implements Serializable {
 
     private final double preference;
 
-    @JsonIgnore
     private final long timestamp;
 
     Preference(long userId, long itemId) {

@@ -37,7 +37,7 @@ public class Migration implements Serializable {
     }
 
     /**
-     * reducing 128-bit UUID to 64-bit long could lead to id clashes. For product recommendations
+     * reducing 128-bit UUID to 64-bit long could lead to id clashes. For item recommendations
      * this is acceptable, because it will only slightly impact the recommendation quality.
      */
     public static long toId(UUID uuid) {

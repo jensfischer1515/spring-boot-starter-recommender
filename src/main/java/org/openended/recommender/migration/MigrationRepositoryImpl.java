@@ -17,17 +17,11 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Wither;
 
-/**
- * CREATE TABLE taste_id_migration (
- * long_id BIGINT NOT NULL PRIMARY KEY,
- * string_id VARCHAR(255) NOT NULL UNIQUE
- * );
- */
 @RequiredArgsConstructor
 @AllArgsConstructor(access = PRIVATE) // for @Wither
 public class MigrationRepositoryImpl implements MigrationRepository {
 
-    private final NamedParameterJdbcOperations operations;
+    private final NamedParameterJdbcOperations jdbcOperations;
 
     @Wither
     private String sqlSave = "merge into taste_id_migration (long_id, string_id) key(long_id) values (:id, :uuid)";
@@ -45,7 +39,7 @@ public class MigrationRepositoryImpl implements MigrationRepository {
         }
 
         Map<String, Object> params = ImmutableMap.of("ids", Longs.asList(ids));
-        return operations.queryForList(sqlLookupUuids, params, String.class).stream()
+        return jdbcOperations.queryForList(sqlLookupUuids, params, String.class).stream()
                 .map(UUID::fromString)
                 .collect(toList());
     }
@@ -54,13 +48,13 @@ public class MigrationRepositoryImpl implements MigrationRepository {
     public Migration save(UUID uuid) {
         Migration migration = new Migration(uuid);
         Map<String, Object> params = ImmutableMap.of("id", migration.getId(), "uuid", migration.getUuid());
-        operations.update(sqlSave, params);
+        jdbcOperations.update(sqlSave, params);
         return migration;
     }
 
     @Override
     public void delete(long id) {
         Map<String, Object> params = ImmutableMap.of("id", id);
-        operations.update(sqlDelete, params);
+        jdbcOperations.update(sqlDelete, params);
     }
 }

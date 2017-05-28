@@ -5,7 +5,6 @@ import static java.util.Arrays.stream;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import org.apache.mahout.cf.taste.common.NoSuchItemException;
@@ -15,7 +14,6 @@ import org.apache.mahout.cf.taste.recommender.Rescorer;
 import org.apache.mahout.common.LongPair;
 import org.openended.recommender.migration.Migration;
 import org.openended.recommender.migration.MigrationRepository;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.NonNull;
@@ -24,7 +22,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Service
 @RequiredArgsConstructor
 public class RecommenderServiceImpl implements RecommenderService {
 
@@ -44,7 +41,7 @@ public class RecommenderServiceImpl implements RecommenderService {
 
     @Override
     @Transactional(propagation = REQUIRED)
-    public List<UUID> mostSimilarItems(UUID[] itemUuids, int count) {
+    public List<UUID> recommend(UUID[] itemUuids, int count) {
         long[] itemIdsWithPreferences = stream(itemUuids)
                 .mapToLong(Migration::toId)
                 .filter(this::hasPreferences)

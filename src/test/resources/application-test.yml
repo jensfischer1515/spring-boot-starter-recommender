@@ -29,9 +29,6 @@ endpoints:
 
 logging:
   pattern:
-    # see https://github.com/spring-cloud/spring-cloud-sleuth/blob/master/docs/src/main/asciidoc/features.adoc#features
-    # see TraceEnvironmentPostProcessor#postProcessEnvironment(ConfigurableEnvironment, SpringApplication)
-    #level: '%clr(%5p) %clr([${spring.application.name:},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-},%X{X-Span-Export:-}]){yellow}'
     console: '%clr(%6relative){faint} %clr(${LOG_LEVEL_PATTERN:-%5level}) %clr(%-40.40logger{0}){cyan} %clr(:){faint} %message%n%wEx'
   level:
     org.openended.mahout: 'DEBUG'
