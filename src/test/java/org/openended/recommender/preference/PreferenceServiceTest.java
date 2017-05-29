@@ -23,17 +23,17 @@ public class PreferenceServiceTest {
     private PreferenceService preferenceService;
 
     @Test
-    public void should_save_from_order() {
+    public void should_save_from_user() {
         // GIVEN
-        UUID orderId = randomUUID();
-        Map<UUID, Integer> productQuantities = ImmutableMap.of(
+        UUID userUuid = randomUUID();
+        Map<UUID, Integer> itemQuantities = ImmutableMap.of(
                 randomUUID(), 1,
                 randomUUID(), 3,
                 randomUUID(), 5
         );
 
         // WHEN
-        List<Preference> preferences = preferenceService.saveFromUserUUID(orderId, productQuantities);
+        List<Preference> preferences = preferenceService.saveFromUserUuid(userUuid, itemQuantities);
 
         // THEN
         then(preferences).hasSize(3);

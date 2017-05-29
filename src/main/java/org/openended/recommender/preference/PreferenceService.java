@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public interface PreferenceService {
-    void removeByItemUuid(UUID productId);
+    void removeByItemUuid(UUID itemUuid);
 
-    List<Preference> saveFromUserUUID(UUID orderId, Map<UUID, Integer> productQuantities);
+    List<Preference> saveFromUserUuid(UUID userUuid, Map<UUID, Integer> itemQuantities);
 }
