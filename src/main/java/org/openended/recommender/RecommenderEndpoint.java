@@ -33,8 +33,8 @@ public class RecommenderEndpoint extends AbstractNamedMvcEndpoint {
     }
 
     @GetMapping(path = "/recommendations", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<UUID>> itemRecommendations(@RequestParam(name = "item") UUID[] itemUuids,
-                                                          @RequestParam(name = "count", defaultValue = "10") int count
+    public ResponseEntity<List<UUID>> recommendations(@RequestParam(name = "item") UUID[] itemUuids,
+                                                      @RequestParam(name = "count", defaultValue = "10") int count
     ) {
         List<UUID> mostSimilarItems = recommenderService.recommend(itemUuids, count);
         return ResponseEntity.ok(mostSimilarItems);

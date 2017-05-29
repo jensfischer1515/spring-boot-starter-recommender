@@ -1,57 +1,63 @@
 buildscript {
-    ext {
-        springBootVersion = '1.5.3.RELEASE'
-    }
     repositories {
-        mavenCentral()
+        jcenter()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.2.RELEASE"
     }
 }
 
 apply plugin: 'java'
+apply plugin: 'maven-publish'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
-apply plugin: 'org.springframework.boot'
+apply plugin: "io.spring.dependency-management"
 
-version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
-repositories {
-    mavenCentral()
+project.with {
+    group = 'org.openended'
+    version = "${System.env.BUILD_TIMESTAMP ?: 'DEV-SNAPSHOT'}"
 }
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+repositories {
+    jcenter()
+}
+
+dependencyManagement {
+    imports {
+        //mavenBom 'org.springframework.boot:spring-boot-dependencies:1.5.3.RELEASE'
+        mavenBom 'org.springframework.boot:spring-boot-starter-parent:1.5.3.RELEASE'
+    }
+}
 
 dependencies {
-    compile('com.google.guava:guava:21.0')
-
-    compile('org.apache.mahout:mahout-mr:0.13.0') {
+    compile('org.apache.mahout:mahout-integration:0.13.0') {
+        exclude group: 'org.apache.hbase'
         exclude group: 'org.apache.hadoop'
         exclude group: 'org.apache.lucene'
         exclude group: 'org.apache.solr'
+        exclude group: 'com.thoughtworks.xstream'
+        exclude group: 'commons-cli'
         exclude group: 'log4j', module: 'log4j'
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     }
-
-    compile('org.apache.mahout:mahout-integration:0.13.0') {
-        exclude group: 'org.apache.hadoop'
-        exclude group: 'org.apache.lucene'
-        exclude group: 'org.apache.solr'
-        exclude group: 'org.apache.hbase'
-    }
-
-    compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
-
-    compile('org.springframework.boot:spring-boot-starter-jdbc')
-    compile('org.springframework.boot:spring-boot-starter-web')
-    compile('org.springframework.boot:spring-boot-starter-hateoas')
-    compileOnly('org.springframework.boot:spring-boot-starter-actuator')
+    compile('org.springframework:spring-jdbc')
+    compile('org.springframework:spring-webmvc')
+    compileOnly('org.springframework.boot:spring-boot-actuator')
     compileOnly('org.projectlombok:lombok')
 
-    testCompile('org.springframework.boot:spring-boot-starter-test')
-    testCompile('org.assertj:assertj-core')
     testCompile('org.mockito:mockito-core')
-    testRuntime('com.h2database:h2')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
     testRuntime('org.springframework.boot:spring-boot-starter-actuator')
+    testRuntime('org.springframework.boot:spring-boot-starter-web')
+    testRuntime('com.h2database:h2')
 }
