@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -107,8 +108,9 @@ public class RecommenderAutoConfiguration {
         PreferenceRepository preferenceRepository();
     }
 
-    @Configuration
+    @Configuration("databaseConfiguration")
     @ConditionalOnClass(name = "com.mysql.jdbc.Driver")
+    @ConditionalOnMissingClass("org.h2.Driver")
     @RequiredArgsConstructor
     static class MySQLConfiguration implements DatabaseConfiguration {
 
@@ -140,7 +142,7 @@ public class RecommenderAutoConfiguration {
         }
     }
 
-    @Configuration
+    @Configuration("databaseConfiguration")
     @ConditionalOnClass(name = "org.h2.Driver")
     @RequiredArgsConstructor
     static class H2Configuration implements DatabaseConfiguration {
