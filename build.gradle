@@ -7,13 +7,17 @@ buildscript {
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'maven-publish'
-apply plugin: 'idea'
-apply plugin: 'eclipse'
-apply plugin: "io.spring.dependency-management"
+plugins {
+    id 'java'
+    id 'io.spring.dependency-management' version '1.0.2.RELEASE'
+    id 'maven'
+    id 'maven-publish'
+    id 'jacoco'
+    id 'com.github.kt3k.coveralls' version '2.6.3'
+}
 
 sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 project.with {
     group = 'org.openended'
@@ -28,7 +32,15 @@ publishing {
     }
 }
 
+jacocoTestReport {
+    reports {
+        xml.enabled = true // coveralls plugin depends on xml format report
+        html.enabled = true
+    }
+}
+
 repositories {
+    mavenLocal()
     jcenter()
 }
 
