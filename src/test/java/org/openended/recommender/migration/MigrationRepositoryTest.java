@@ -27,9 +27,32 @@ public class MigrationRepositoryTest {
         long id3 = migrationRepository.save(randomUUID()).getId();
 
         // WHEN
-        List<UUID> migrations = migrationRepository.lookupUuids(id1, id2, id3);
+        List<UUID> uuids = migrationRepository.lookupUuids(id1, id2, id3);
 
         // THEN
-        then(migrations).hasSize(3);
+        then(uuids).hasSize(3);
+    }
+
+    @Test
+    public void should_find_empty_uuids_by_empty_ids() {
+        // WHEN
+        List<UUID> uuids = migrationRepository.lookupUuids();
+
+        // THEN
+        then(uuids).isEmpty();
+    }
+
+    @Test
+    public void should_delete() {
+        // GIVEN
+        Migration migration1 = migrationRepository.save(randomUUID());
+        Migration migration2 = migrationRepository.save(randomUUID());
+
+        // WHEN
+        migrationRepository.delete(migration1.getId());
+        List<UUID> uuids = migrationRepository.lookupUuids(migration1.getId(), migration2.getId());
+
+        // THEN
+        then(uuids).containsOnly(migration2.getUuid());
     }
 }

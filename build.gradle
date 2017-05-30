@@ -66,6 +66,9 @@ dependencies {
     compileOnly('org.springframework.boot:spring-boot-actuator')
     compileOnly('org.projectlombok:lombok')
 
+    // https://mvnrepository.com/artifact/org.assertj/assertj-core
+    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.8.0'
+
     testCompile('org.mockito:mockito-core')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompileOnly('org.projectlombok:lombok')
