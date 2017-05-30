@@ -22,6 +22,9 @@ public class PreferenceServiceTest {
     @Autowired
     private PreferenceService preferenceService;
 
+    @Autowired
+    private PreferenceRepository preferenceRepository;
+
     @Test
     public void should_save_from_user() {
         // GIVEN
@@ -43,5 +46,21 @@ public class PreferenceServiceTest {
         then(preferences)
                 .extracting(Preference::getUserId)
                 .isNotNull();
+    }
+
+    @Test
+    public void should_remove_by_item_uuid() {
+        // GIVEN
+        UUID userUuid = randomUUID();
+        UUID itemUuid = randomUUID();
+        long itemId = preferenceService.saveFromUserUuid(userUuid, ImmutableMap.of(itemUuid, 1))
+                .iterator().next().getItemId();
+
+        // WHEN
+        preferenceService.removeByItemUuid(itemUuid);
+        List<Preference> preferences = preferenceRepository.findByItemId(itemId);
+
+        // THEN
+        then(preferences).isEmpty();
     }
 }

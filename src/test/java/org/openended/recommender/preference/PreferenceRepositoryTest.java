@@ -60,4 +60,17 @@ public class PreferenceRepositoryTest {
         // THEN
         then(preference).isZero();
     }
+
+    @Test
+    public void should_delete() {
+        // GIVEN
+        Preference preference = preferenceRepository.save(new Preference(47L, 11L, 99.0));
+
+        // WHEN
+        preferenceRepository.delete(preference);
+        List<Preference> preferences = preferenceRepository.findByItemId(11L);
+
+        // THEN
+        then(preferences).isEmpty();
+    }
 }
