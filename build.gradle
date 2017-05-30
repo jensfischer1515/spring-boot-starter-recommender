@@ -68,7 +68,8 @@ dependencies {
 
     testCompile('org.mockito:mockito-core')
     testCompile('org.springframework.boot:spring-boot-starter-test')
-    testRuntime('org.springframework.boot:spring-boot-starter-actuator')
+    testCompile('org.springframework.boot:spring-boot-starter-actuator')
+    testCompileOnly('org.projectlombok:lombok')
     testRuntime('org.springframework.boot:spring-boot-starter-web')
     testRuntime('com.h2database:h2')
 }

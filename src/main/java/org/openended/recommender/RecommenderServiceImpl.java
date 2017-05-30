@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.mahout.cf.taste.common.NoSuchItemException;
+import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.recommender.ItemBasedRecommender;
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.apache.mahout.cf.taste.recommender.Rescorer;
@@ -54,7 +55,6 @@ public class RecommenderServiceImpl implements RecommenderService {
         return migrationRepository.lookupUuids(recommendedItemIds);
     }
 
-    @SneakyThrows
     private List<RecommendedItem> mostSimilarItems(long[] itemIds, int count) {
         if (itemIds.length == 0) {
             return newArrayList();
@@ -65,6 +65,8 @@ public class RecommenderServiceImpl implements RecommenderService {
         } catch (NoSuchItemException e) {
             log.warn("items {} not found", itemIds, e);
             return newArrayList();
+        } catch (TasteException e) {
+            throw new RecommenderException("Error fetching most similar items", e);
         }
     }
 }
