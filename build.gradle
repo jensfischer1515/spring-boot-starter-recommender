@@ -66,13 +66,10 @@ dependencies {
     compileOnly('org.springframework.boot:spring-boot-actuator')
     compileOnly('org.projectlombok:lombok')
 
-    // https://mvnrepository.com/artifact/org.assertj/assertj-core
-    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.8.0'
-
     testCompile('org.mockito:mockito-core')
     testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('org.springframework.boot:spring-boot-starter-actuator')
     testCompileOnly('org.projectlombok:lombok')
-    testRuntime('org.springframework.boot:spring-boot-starter-actuator')
     testRuntime('org.springframework.boot:spring-boot-starter-web')
     testRuntime('com.h2database:h2')
 }
