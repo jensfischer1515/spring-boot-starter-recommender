@@ -1,21 +1,18 @@
 package org.openended.recommender;
 
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
-import static java.util.Arrays.stream;
 import static java.util.UUID.randomUUID;
-import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.springframework.test.jdbc.JdbcTestUtils.deleteFromTables;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openended.recommender.preference.ItemPreference;
 import org.openended.recommender.preference.PreferenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -44,7 +41,6 @@ public class RecommenderServiceTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-
     private Random random;
 
     private List<UUID> items;
@@ -70,7 +66,11 @@ public class RecommenderServiceTest {
 
     private void givenPreferences(int count) {
         IntStream.rangeClosed(1, count)
-                .forEach(i -> givenPreference(randomUser(), randomItemQuantity(), randomItemQuantity()));
+                .forEach(i -> givenPreference(randomUser(), randomItemPreference(), randomItemPreference()));
+    }
+
+    private void givenPreference(UUID user, ItemPreference... itemPreferences) {
+        preferenceService.saveFromUser(user, itemPreferences);
     }
 
     private UUID randomUser() {
@@ -81,30 +81,19 @@ public class RecommenderServiceTest {
         return items.get(random.nextInt(items.size()));
     }
 
-    private int randomQuantity() {
-        return random.nextInt(5) + 1;
+    private int randomQuantity(int max) {
+        return random.nextInt(max) + 1;
     }
 
-    private Pair<UUID, Integer> randomItemQuantity() {
-        return Pair.of(randomItem(), randomQuantity());
-    }
-
-    private UUID givenRandomItem() {
-        return items.get(random.nextInt(items.size()));
-    }
-
-    @SafeVarargs
-    private final void givenPreference(UUID user, Pair<UUID, Integer>... itemQuantities) {
-        Map<UUID, Integer> map = stream(itemQuantities)
-                .collect(toMap(Pair::getKey, Pair::getValue, (first, second) -> first + second));
-        preferenceService.saveFromUser(user, map);
+    private ItemPreference randomItemPreference() {
+        return new ItemPreference(randomItem(), randomQuantity(5));
     }
 
     @Test
     @Transactional
     public void should_recommend_items() {
         // GIVEN
-        UUID[] items = {givenRandomItem()};
+        UUID[] items = {randomItem()};
 
         // WHEN
         List<UUID> recommendations = recommenderService.recommend(items, 10);

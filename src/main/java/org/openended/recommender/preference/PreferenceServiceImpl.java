@@ -1,11 +1,11 @@
 package org.openended.recommender.preference;
 
+import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.openended.recommender.migration.Migration.toId;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.openended.recommender.migration.MigrationRepository;
@@ -42,11 +42,11 @@ public class PreferenceServiceImpl implements PreferenceService {
 
     @Override
     @Transactional(propagation = REQUIRED)
-    public List<Preference> saveFromUser(UUID user, Map<UUID, Integer> itemQuantities) {
+    public List<Preference> saveFromUser(UUID user, ItemPreference... itemPreferences) {
         log.debug("Creating user '{}'", user);
         migrationRepository.save(user);
-        return itemQuantities.entrySet().stream()
-                .map(entry -> save(user, entry.getKey(), entry.getValue()))
+        return stream(itemPreferences)
+                .map(itemPreference -> save(user, itemPreference.getItem(), itemPreference.getPreference()))
                 .collect(toList());
     }
 
