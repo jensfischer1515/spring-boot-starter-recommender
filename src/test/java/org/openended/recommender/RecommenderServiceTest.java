@@ -97,7 +97,7 @@ public class RecommenderServiceTest {
     private final void givenPreference(UUID user, Pair<UUID, Integer>... itemQuantities) {
         Map<UUID, Integer> map = stream(itemQuantities)
                 .collect(toMap(Pair::getKey, Pair::getValue, (first, second) -> first + second));
-        preferenceService.saveFromUserUuid(user, map);
+        preferenceService.saveFromUser(user, map);
     }
 
     @Test

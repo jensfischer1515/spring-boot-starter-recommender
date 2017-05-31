@@ -35,20 +35,20 @@ public class RecommenderEndpoint extends AbstractNamedMvcEndpoint {
     @ExceptionHandler(RecommenderException.class)
     @ResponseBody
     public Recommendations handleRecommenderException(WebRequest request) {
-        UUID[] itemUuids = stream(request.getParameterValues("item"))
+        UUID[] items = stream(request.getParameterValues("item"))
                 .map(UUID::fromString)
                 .toArray(UUID[]::new);
-        log.warn("No recommendations found for {}", Arrays.asList(itemUuids));
-        return new Recommendations(itemUuids, newArrayList());
+        log.warn("No recommendations found for {}", Arrays.asList(items));
+        return new Recommendations(items, newArrayList());
     }
 
     @GetMapping(path = "/recommendations", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Recommendations recommendations(@RequestParam(name = "item") UUID[] itemUuids,
+    public Recommendations recommendations(@RequestParam(name = "item") UUID[] items,
                                            @RequestParam(name = "count", defaultValue = "10") int count
     ) {
-        List<UUID> recommendations = recommenderService.recommend(itemUuids, count);
-        return new Recommendations(itemUuids, recommendations);
+        List<UUID> recommendations = recommenderService.recommend(items, count);
+        return new Recommendations(items, recommendations);
     }
 
     @Getter

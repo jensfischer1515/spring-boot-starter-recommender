@@ -36,7 +36,7 @@ public class PreferenceServiceTest {
         );
 
         // WHEN
-        List<Preference> preferences = preferenceService.saveFromUserUuid(userUuid, itemQuantities);
+        List<Preference> preferences = preferenceService.saveFromUser(userUuid, itemQuantities);
 
         // THEN
         then(preferences).hasSize(3);
@@ -53,11 +53,11 @@ public class PreferenceServiceTest {
         // GIVEN
         UUID userUuid = randomUUID();
         UUID itemUuid = randomUUID();
-        long itemId = preferenceService.saveFromUserUuid(userUuid, ImmutableMap.of(itemUuid, 1))
+        long itemId = preferenceService.saveFromUser(userUuid, ImmutableMap.of(itemUuid, 1))
                 .iterator().next().getItemId();
 
         // WHEN
-        preferenceService.removeByItemUuid(itemUuid);
+        preferenceService.removeByItem(itemUuid);
         List<Preference> preferences = preferenceRepository.findByItemId(itemId);
 
         // THEN
