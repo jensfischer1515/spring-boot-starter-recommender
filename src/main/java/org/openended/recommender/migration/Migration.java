@@ -2,7 +2,6 @@ package org.openended.recommender.migration;
 
 import static lombok.AccessLevel.PACKAGE;
 
-import java.io.Serializable;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -17,16 +16,14 @@ import lombok.ToString;
  *   string_id VARCHAR(36) NOT NULL UNIQUE
  * )
  * </pre>
- *
+ * <p>
  * See {@link org.apache.mahout.cf.taste.impl.model.MySQLJDBCIDMigrator}.
  */
 @Getter
 @ToString(of = {"id", "uuid"})
 @EqualsAndHashCode(of = "id", callSuper = false)
 @AllArgsConstructor(access = PACKAGE)
-public class Migration implements Serializable {
-
-    private static final long serialVersionUID = 7153618981276326568L;
+public class Migration {
 
     private final long id;
 

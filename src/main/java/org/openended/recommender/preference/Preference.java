@@ -2,8 +2,6 @@ package org.openended.recommender.preference;
 
 import static lombok.AccessLevel.PACKAGE;
 
-import java.io.Serializable;
-
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -30,9 +28,7 @@ import lombok.ToString;
 @ToString(of = {"userId", "itemId"})
 @EqualsAndHashCode(of = {"userId", "itemId"}, callSuper = false)
 @AllArgsConstructor(access = PACKAGE)
-public class Preference implements Serializable {
-
-    private static final long serialVersionUID = 6873795629258995067L;
+public class Preference {
 
     private final long userId;
 

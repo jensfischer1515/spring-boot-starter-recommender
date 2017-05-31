@@ -13,4 +13,9 @@ public class RecommenderTestApplication {
     public ScheduledExecutorService scheduledExecutorService() {
         return Executors.newSingleThreadScheduledExecutor();
     }
+
+    @Bean
+    public LoggingDataSourcePostProcessor loggingDataSourcePostProcessor() {
+        return new LoggingDataSourcePostProcessor();
+    }
 }

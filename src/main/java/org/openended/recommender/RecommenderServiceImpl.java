@@ -42,8 +42,8 @@ public class RecommenderServiceImpl implements RecommenderService {
 
     @Override
     @Transactional(propagation = REQUIRED)
-    public List<UUID> recommend(UUID[] itemUuids, int count) {
-        long[] itemIdsWithPreferences = stream(itemUuids)
+    public List<UUID> recommend(UUID[] items, int count) {
+        long[] itemIdsWithPreferences = stream(items)
                 .mapToLong(Migration::toId)
                 .filter(this::hasPreferences)
                 .toArray();
