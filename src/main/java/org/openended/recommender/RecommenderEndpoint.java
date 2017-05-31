@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class RecommenderEndpoint extends AbstractNamedMvcEndpoint {
 
+    @NonNull
     private final RecommenderService recommenderService;
 
     public RecommenderEndpoint(RecommenderProperties recommenderProperties, RecommenderService recommenderService) {

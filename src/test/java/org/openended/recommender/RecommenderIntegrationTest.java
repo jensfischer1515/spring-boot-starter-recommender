@@ -9,6 +9,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.annotation.AliasFor;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Inherited
 @Transactional
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles
 public @interface RecommenderIntegrationTest {
+    @AliasFor(annotation = ActiveProfiles.class, attribute = "profiles") String[] activeProfiles() default {"test"};
+
+    @AliasFor(annotation = SpringBootTest.class, attribute = "properties") String[] properties() default {};
 }
