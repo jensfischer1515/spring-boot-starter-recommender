@@ -12,17 +12,19 @@ import java.util.stream.IntStream;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openended.recommender.migration.MigrationRepository;
 import org.openended.recommender.preference.ItemPreference;
 import org.openended.recommender.preference.PreferenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.transaction.AfterTransaction;
 import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.transaction.annotation.Transactional;
 
 @RecommenderIntegrationTest(properties = {
-        "logging.level.jdbc.sqlonly=WARN",
+        "logging.level.jdbc.sqlonly=INFO",
         "logging.level.jdbc.resultsettable=WARN",
         "logging.level.org.openended.recommender=INFO"
 })
@@ -37,6 +39,9 @@ public class RecommenderServiceTest {
 
     @Autowired
     private RecommenderRefresher recommenderRefresher;
+
+    @Autowired
+    private MigrationRepository migrationRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -56,6 +61,19 @@ public class RecommenderServiceTest {
     @AfterTransaction
     public void teardown() {
         deleteFromTables(jdbcTemplate, "taste_preferences", "taste_id_migration");
+    }
+
+    @Test
+    @Transactional
+    public void should_recommend_items() {
+        // GIVEN
+        UUID[] items = {findItemWithHighestPreference()};
+
+        // WHEN
+        List<UUID> recommendations = recommenderService.recommend(items, 10);
+
+        // THEN
+        then(recommendations.size()).isGreaterThan(0);
     }
 
     private void givenItems(int count) {
@@ -89,16 +107,10 @@ public class RecommenderServiceTest {
         return new ItemPreference(randomItem(), randomQuantity(5));
     }
 
-    @Test
-    @Transactional
-    public void should_recommend_items() {
-        // GIVEN
-        UUID[] items = {randomItem()};
-
-        // WHEN
-        List<UUID> recommendations = recommenderService.recommend(items, 10);
-
-        // THEN
-        then(recommendations.size()).isGreaterThan(0);
+    private UUID findItemWithHighestPreference() {
+        String sql = "select item_id from taste_preferences group by item_id order by sum(preference) desc limit 1";
+        ResultSetExtractor<Long> extractor = rs -> rs.next() ? rs.getLong("item_id") : null;
+        Long itemId = jdbcTemplate.query(sql, extractor);
+        return migrationRepository.lookupUuids(itemId).stream().findFirst().orElseThrow(IllegalStateException::new);
     }
 }
