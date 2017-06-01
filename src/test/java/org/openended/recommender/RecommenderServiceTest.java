@@ -24,7 +24,7 @@ import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.transaction.annotation.Transactional;
 
 @RecommenderIntegrationTest(properties = {
-        "logging.level.jdbc.sqlonly=INFO",
+        "logging.level.jdbc.sqlonly=WARN",
         "logging.level.jdbc.resultsettable=WARN",
         "logging.level.org.openended.recommender=INFO"
 })
@@ -67,13 +67,14 @@ public class RecommenderServiceTest {
     @Transactional
     public void should_recommend_items() {
         // GIVEN
-        UUID[] items = {findItemWithHighestPreference()};
+        UUID[] items = {findItemWithMostUsers()};
+        int count = 10;
 
         // WHEN
-        List<UUID> recommendations = recommenderService.recommend(items, 10);
+        List<UUID> recommendations = recommenderService.recommend(items, count);
 
         // THEN
-        then(recommendations.size()).isGreaterThan(0);
+        then(recommendations).hasSize(count);
     }
 
     private void givenItems(int count) {
@@ -107,8 +108,8 @@ public class RecommenderServiceTest {
         return new ItemPreference(randomItem(), randomQuantity(5));
     }
 
-    private UUID findItemWithHighestPreference() {
-        String sql = "select item_id from taste_preferences group by item_id order by sum(preference) desc limit 1";
+    private UUID findItemWithMostUsers() {
+        String sql = "select item_id from taste_preferences group by item_id order by count(user_id) desc limit 1";
         ResultSetExtractor<Long> extractor = rs -> rs.next() ? rs.getLong("item_id") : null;
         Long itemId = jdbcTemplate.query(sql, extractor);
         return migrationRepository.lookupUuids(itemId).stream().findFirst().orElseThrow(IllegalStateException::new);
