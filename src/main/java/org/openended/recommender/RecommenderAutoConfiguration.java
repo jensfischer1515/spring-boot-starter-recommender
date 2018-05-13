@@ -85,7 +85,7 @@ public class RecommenderAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public RecommenderService recommenderService() {
-        return new RecommenderServiceImpl(recommender(), rescorer(), databaseConfiguration.migrationRepository());
+        return new RecommenderServiceImpl(recommenderProperties, recommender(), rescorer(), databaseConfiguration.migrationRepository());
     }
 
     @Bean

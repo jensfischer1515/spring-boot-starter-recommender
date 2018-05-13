@@ -44,11 +44,8 @@ public class RecommenderEndpoint extends AbstractNamedMvcEndpoint {
 
     @GetMapping(path = "/recommendations", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Recommendations recommendations(@RequestParam(name = "item") UUID[] items,
-                                           @RequestParam(name = "count", defaultValue = "10") int count
-    ) {
-        List<UUID> recommendations = recommenderService.recommend(items, count);
-        return new Recommendations(items, recommendations);
+    public Recommendations recommendations(@RequestParam(name = "item") UUID[] items) {
+        return new Recommendations(items, recommenderService.recommend(items));
     }
 
     @Getter
@@ -58,7 +55,7 @@ public class RecommenderEndpoint extends AbstractNamedMvcEndpoint {
 
         private final List<UUID> recommendations;
 
-        public Recommendations(UUID[] items, List<UUID> recommendations) {
+        Recommendations(UUID[] items, List<UUID> recommendations) {
             this(Arrays.asList(items), recommendations);
         }
     }

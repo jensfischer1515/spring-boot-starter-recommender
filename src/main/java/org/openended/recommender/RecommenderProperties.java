@@ -20,4 +20,6 @@ public class RecommenderProperties {
 
     @Value("${refresher.rate:300}")
     private long refresherRate;
+
+    private int howMany = 10;
 }

@@ -68,13 +68,12 @@ public class RecommenderServiceTest {
     public void should_recommend_items() {
         // GIVEN
         UUID[] items = {findItemWithMostUsers()};
-        int count = 10;
 
         // WHEN
-        List<UUID> recommendations = recommenderService.recommend(items, count);
+        List<UUID> recommendations = recommenderService.recommend(items);
 
         // THEN
-        then(recommendations).hasSize(count);
+        then(recommendations).hasSize(10);
     }
 
     private void givenItems(int count) {

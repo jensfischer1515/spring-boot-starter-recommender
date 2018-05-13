@@ -29,6 +29,9 @@ import lombok.extern.slf4j.Slf4j;
 public class RecommenderServiceImpl implements RecommenderService {
 
     @NonNull
+    private final RecommenderProperties recommenderProperties;
+
+    @NonNull
     private final ItemBasedRecommender itemBasedRecommender;
 
     @NonNull
@@ -44,13 +47,13 @@ public class RecommenderServiceImpl implements RecommenderService {
 
     @Override
     @Transactional(propagation = REQUIRED)
-    public List<UUID> recommend(UUID[] items, int count) {
+    public List<UUID> recommend(UUID... items) {
         long[] itemIdsWithPreferences = stream(items)
                 .mapToLong(Migration::toId)
                 .filter(this::hasPreferences)
                 .toArray();
 
-        long[] recommendedItemIds = mostSimilarItems(itemIdsWithPreferences, count).stream()
+        long[] recommendedItemIds = mostSimilarItems(itemIdsWithPreferences).stream()
                 .mapToLong(RecommendedItem::getItemID)
                 .toArray();
 
@@ -58,13 +61,13 @@ public class RecommenderServiceImpl implements RecommenderService {
     }
 
     @VisibleForTesting
-    List<RecommendedItem> mostSimilarItems(long[] itemIds, int count) {
+    List<RecommendedItem> mostSimilarItems(long... itemIds) {
         if (itemIds.length == 0) {
             return newArrayList();
         }
 
         try {
-            return itemBasedRecommender.mostSimilarItems(itemIds, count, rescorer, false);
+            return itemBasedRecommender.mostSimilarItems(itemIds, recommenderProperties.getHowMany(), rescorer, false);
         } catch (NoSuchItemException e) {
             log.warn("items {} not found", itemIds, e);
             return newArrayList();
