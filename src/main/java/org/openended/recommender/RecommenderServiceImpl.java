@@ -17,6 +17,8 @@ import org.openended.recommender.migration.Migration;
 import org.openended.recommender.migration.MigrationRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -55,7 +57,8 @@ public class RecommenderServiceImpl implements RecommenderService {
         return migrationRepository.lookupUuids(recommendedItemIds);
     }
 
-    private List<RecommendedItem> mostSimilarItems(long[] itemIds, int count) {
+    @VisibleForTesting
+    List<RecommendedItem> mostSimilarItems(long[] itemIds, int count) {
         if (itemIds.length == 0) {
             return newArrayList();
         }
