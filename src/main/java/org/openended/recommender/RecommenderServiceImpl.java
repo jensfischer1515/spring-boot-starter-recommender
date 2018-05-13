@@ -67,7 +67,12 @@ public class RecommenderServiceImpl implements RecommenderService {
         }
 
         try {
-            return itemBasedRecommender.mostSimilarItems(itemIds, recommenderProperties.getHowMany(), rescorer, false);
+            return itemBasedRecommender.mostSimilarItems(
+                    itemIds,
+                    recommenderProperties.getHowMany(),
+                    rescorer,
+                    recommenderProperties.isExcludeItemIfNotSimilarToAll()
+            );
         } catch (NoSuchItemException e) {
             log.warn("items {} not found", itemIds, e);
             return newArrayList();

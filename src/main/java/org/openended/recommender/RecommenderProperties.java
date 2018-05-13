@@ -22,4 +22,6 @@ public class RecommenderProperties {
     private long refresherRate;
 
     private int howMany = 10;
+
+    private boolean excludeItemIfNotSimilarToAll = false;
 }
